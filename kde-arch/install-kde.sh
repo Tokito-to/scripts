@@ -48,7 +48,6 @@ prompt "Proceed? [y/N]: "
 read PROCEED
 [[ "$PROCEED" != "y" ]] && err "User chose not to proceed. Exiting."
 
-
 set -x
 
 # Instal and Setup sudo
@@ -66,10 +65,11 @@ echo "## Allow $USERNAME to execute any root command
 %$USERNAME ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 # Pacman Configuration
-sed -i "s/#ParallelDownloads = 5/ParallelDownloads = 4/" "/etc/pacman.conf"
+sed -i "s/#ParallelDownloads    = 5/ParallelDownloads    = 4/" "/etc/pacman.conf"
 sed -i "s/#Color/Color/" "/etc/pacman.conf"
-sed -i "s/#IgnorePkg    = IgnorePkg    = discover plasma-welcome" "/etc/pacman.conf" #useless on arch kde
+sed -i "s/#IgnorePkg    =/IgnorePkg    = discover plasma-welcome/" "/etc/pacman.conf" #useless on arch kde
 
 #Install KDE Plasma Desktop
-pacman -Sy --noconfirm plasma-meta plasma-wayland-session
+pacman -Sy --noconfirm plasma-meta plasma-wayland-session dolphin kate konsole zsh ark
 systemctl enable sddm.service
+
