@@ -29,7 +29,7 @@ USERNAME=${USERNAME:-asuna}
 
 prompt "User Password [yuuki]: "
 read -s USER_PASSWORD
-USER_PASSWORD=${USER_PASSWORD:-yuuki}
+USER_PASSWORD=${USER_PASSWORD:-yuuki} && echo
 
 prompt "User as Root $USERNAME [y/N]: "
 read USER_AS_ROOT
@@ -68,7 +68,6 @@ echo "## Allow $USERNAME to execute any root command
 # Pacman Configuration
 sed -i "s/#ParallelDownloads = 5/ParallelDownloads = 4/" "/etc/pacman.conf"
 sed -i "s/#Color/Color/" "/etc/pacman.conf"
-sed -i "s/#IgnorePkg   =/IgnorePkg   = discover plasma-welcome/" "/etc/pacman.conf" #useless on arch kde
 
 #Install KDE Plasma Desktop
 pacman -Sy --noconfirm plasma-meta plasma-wayland-session konsole
@@ -76,6 +75,10 @@ systemctl enable sddm.service
 
 #Install Additional Utils
 pacman -Sy --noconfirm dolphin kate zsh ark
+
+#Remove unwanted packages
+pacman -Rdd discover plasma-welcome
+sed -i "s/#IgnorePkg   =/IgnorePkg   = discover plasma-welcome/" "/etc/pacman.conf" #useless on arch kde
 
 # Install Waterfox-G-Kpe
 echo "
