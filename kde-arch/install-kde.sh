@@ -74,17 +74,17 @@ pacman -Sy --noconfirm plasma-meta plasma-wayland-session konsole
 systemctl enable sddm.service
 
 #Install Additional Utils
-pacman -Sy --noconfirm dolphin kate zsh ark
+pacman -Sy --noconfirm dolphin kate zsh ark android-tools
 
 #Remove unwanted packages
-pacman -Rdd discover plasma-welcome
+pacman -Rdd --noconfirm discover plasma-welcome
 sed -i "s/#IgnorePkg   =/IgnorePkg   = discover plasma-welcome/" "/etc/pacman.conf" #useless on arch kde
 
 # Install Waterfox-G-Kpe
-echo "
+echo '
 ## Prebuilt Waterfox Repo
 [home_hawkeye116477_waterfox_Arch]
-Server = https://download.opensuse.org/repositories/home:/hawkeye116477:/waterfox/Arch/$arch" >> /etc/pacman.conf
+Server = https://download.opensuse.org/repositories/home:/hawkeye116477:/waterfox/Arch/$arch' >> /etc/pacman.conf
 #Install Key
 key=$(curl -fsSL https://download.opensuse.org/repositories/home:hawkeye116477:waterfox/Arch/$(uname -m)/home_hawkeye116477_waterfox_Arch.key)
 fingerprint=$(gpg --quiet --with-colons --import-options show-only --import --fingerprint <<< "${key}" | awk -F: '$1 == "fpr" { print $10 }')
