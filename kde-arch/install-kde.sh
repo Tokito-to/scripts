@@ -91,12 +91,13 @@ fingerprint=$(gpg --quiet --with-colons --import-options show-only --import --fi
 pacman-key --init
 pacman-key --add - <<< "${key}"
 pacman-key --lsign-key "${fingerprint}"
-pacman -Sy home_hawkeye116477_waterfox_Arch/waterfox-g-kpe
+pacman -Sy --noconfirm home_hawkeye116477_waterfox_Arch/waterfox-g-kpe
 
 # Install configs
 git clone https://github.com/Tokito-Kun/scripts/ -b configs
-mv -fv scripts/kcminputrc /home/"$USERNAME"/.config/
-mv -fv scripts/kde_settings.conf /etc/sddm.conf.d/
+cp -fv "scripts/kcminputrc" "/home/$USERNAME/.config/"
+mkdir -p "/etc/sddm.conf.d/"
+cp -fv "scripts/kde_settings.conf" "/etc/sddm.conf.d/"
 systemctl enable sddm.service
 
 # ohmyszh Install
@@ -104,6 +105,6 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
-mv -v scripts/.zshrc /home/"$USERNAME"/
-mv -v scripts/.p10k.zsh /home/"$USERNAME"/
-./ohmyzsh.sh
+cp -v "scripts/.zshrc" "/home/$USERNAME/"
+cp -v "scripts/.p10k.zsh" "/home/$USERNAME/"
+./scripts/ohmyzsh.sh
