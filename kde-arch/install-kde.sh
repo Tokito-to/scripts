@@ -83,6 +83,7 @@ sed -i "s/#IgnorePkg   =/IgnorePkg   = discover plasma-welcome/" "/etc/pacman.co
 echo '
 ## Prebuilt Waterfox Repo
 [home_hawkeye116477_waterfox_Arch]
+Server = https://downloadcontent.opensuse.org/repositories/home:/hawkeye116477:/waterfox/Arch/$arch
 Server = https://download.opensuse.org/repositories/home:/hawkeye116477:/waterfox/Arch/$arch' >> /etc/pacman.conf
 #Install Key
 key=$(curl -fsSL https://download.opensuse.org/repositories/home:hawkeye116477:waterfox/Arch/$(uname -m)/home_hawkeye116477_waterfox_Arch.key)
