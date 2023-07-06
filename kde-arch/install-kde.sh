@@ -73,7 +73,7 @@ sed -i "s/#Color/Color/" "/etc/pacman.conf"
 pacman -Sy --noconfirm plasma-meta plasma-wayland-session konsole
 
 #Install Additional Utils
-pacman -Sy --noconfirm dolphin kate zsh ark android-tools
+pacman -Sy --noconfirm dolphin kate zsh ark android-tools ntfs-3g
 
 #Remove unwanted packages
 pacman -Rdd --noconfirm discover plasma-welcome
@@ -95,8 +95,9 @@ pacman -Sy --noconfirm home_hawkeye116477_waterfox_Arch/waterfox-g-kpe
 
 # Install configs
 git clone https://github.com/Tokito-Kun/scripts/ -b configs
-cp -fv "scripts/kcminputrc" "/home/$USERNAME/.config/"
 mkdir -p "/etc/sddm.conf.d/"
+mkdir -p "/home/$USERNAME/.config/"
+cp -fv "scripts/kcminputrc" "/home/$USERNAME/.config/"
 cp -fv "scripts/kde_settings.conf" "/etc/sddm.conf.d/"
 systemctl enable sddm.service
 
