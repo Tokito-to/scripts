@@ -11,9 +11,10 @@ echo "Your current Root Avail space : ${STORAGE}"
 echo "Swap Size:[G]"
 read -r SWAP_SIZE
 
+if [[ "$SWAP_SIZE" =~ ^[0-9]+[GM]$ ]]; then
  echo "creating swapfile "
          swapon --show
-         fallocate -l "$SIZE" /swapfile
+         fallocate -l "$SWAP_SIZE" /swapfile
          ls -lh /swapfile
          chmod 600 /swapfile
          mkswap /swapfile
@@ -21,3 +22,6 @@ read -r SWAP_SIZE
          swapon --show
          cp /etc/fstab /etc/fstab.bak
        echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab
+else
+ echo "Enter Swap size with it's prefix i.e G,M specified"
+fi
