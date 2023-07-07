@@ -71,6 +71,7 @@ sed -i "s/#Color/Color/" "/etc/pacman.conf"
 
 #Install KDE Plasma Desktop
 pacman -Sy --noconfirm plasma-meta plasma-wayland-session konsole
+systemctl enable sddm.service
 
 #Install Additional Utils
 pacman -Sy --noconfirm dolphin kate zsh ark android-tools ntfs-3g
@@ -96,17 +97,11 @@ pacman -Sy --noconfirm home_hawkeye116477_waterfox_Arch/waterfox-g-kpe
 
 # Install configs
 git clone https://github.com/Tokito-Kun/scripts/ -b configs
+rm -rf "scripts/.git"
+mkdir -p "/home/$USERNAME/git"
+cp -rv "scripts" "/home/$USERNAME/git"
 mkdir -p "/etc/sddm.conf.d/"
 mkdir -p "/home/$USERNAME/.config/"
-cp -fv "scripts/kcminputrc" "/home/$USERNAME/.config/"
 cp -fv "scripts/kde_settings.conf" "/etc/sddm.conf.d/"
-systemctl enable sddm.service
-
-# ohmyszh Install
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
-cp -v "scripts/.zshrc" "/home/$USERNAME/"
-cp -v "scripts/.p10k.zsh" "/home/$USERNAME/"
-./scripts/ohmyzsh.sh
+cp -fv "scripts/kcminputrc" "/home/$USERNAME/.config/"
+rm -rf scripts
