@@ -16,11 +16,11 @@ cp -fv .p10k.zsh
 # Install ohmyzsh for root
 sudo bash <<EOF
 cd ~/
-cp -rv "/home/$USERNAME/git/scripts" .
-sh scripts/ohmyzsh.sh
+cp -rv "/home/$USERNAME/git/config" .
+sh config/ohmyzsh.sh
 cp -r "/home/$USERNAME/.oh-my-zsh" .
-cp -fv "scripts/.zshrc" .
-cp -fv "scripts/.p10k.zsh" .
+cp -fv "config/.zshrc" .
+cp -fv "config/.p10k.zsh" .
 EOF
 echo "
 Restart Konsole to load changes or enter exec zsh"

@@ -96,12 +96,15 @@ pacman-key --lsign-key "${fingerprint}"
 pacman -Sy --noconfirm home_hawkeye116477_waterfox_Arch/waterfox-g-kpe
 
 # Install configs
-git clone https://github.com/Tokito-Kun/scripts/ -b configs
-rm -rf "scripts/.git"
+git clone https://github.com/Tokito-Kun/scripts/ -b configs config
+rm -rf "config/.git"
 mkdir -p "/home/$USERNAME/git"
-cp -rv "scripts" "/home/$USERNAME/git"
+cp -rv "config" "/home/$USERNAME/git"
 mkdir -p "/etc/sddm.conf.d/"
 mkdir -p "/home/$USERNAME/.config/"
-cp -fv "scripts/kde_settings.conf" "/etc/sddm.conf.d/"
-cp -fv "scripts/kcminputrc" "/home/$USERNAME/.config/"
+cp -fv "config/kde_settings.conf" "/etc/sddm.conf.d/"
+cp -fv "config/kcminputrc" "/home/$USERNAME/.config/"
 rm -rf scripts
+su $USERNAME <<EOF
+git clone https://github.com/Tokito-Kun/scripts/ ~/scripts
+EOF
