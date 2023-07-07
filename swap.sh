@@ -11,10 +11,11 @@ echo "Your current Root Avail space : ${STORAGE}"
 echo "Swap Size:[G]"
 read -r SWAP_SIZE
 
-if [[ "$SWAP_SIZE" =~ ^[0-9]+[GM]$ ]]; then
+if [[ "$SWAP_SIZE" =~ ^[0-9]+[GM]$ ]] ;then
  echo "creating swapfile "
          swapon --show
-         fallocate -l "$SWAP_SIZE" /swapfile
+    if ! fallocate -l "$SWAP_SIZE" /swapfile ;then
+         exit 1 ;fi
          ls -lh /swapfile
          chmod 600 /swapfile
          mkswap /swapfile
