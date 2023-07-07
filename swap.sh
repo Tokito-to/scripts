@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+set -e
+
 #check you sudo
 if [[  $EUID -ne 0 ]]; then
         echo "Run with sudo";
@@ -14,8 +16,7 @@ read -r SWAP_SIZE
 if [[ "$SWAP_SIZE" =~ ^[0-9]+[GM]$ ]] ;then
  echo "creating swapfile "
          swapon --show
-    if ! fallocate -l "$SWAP_SIZE" /swapfile ;then
-         exit 1 ;fi
+         fallocate -l "$SWAP_SIZE" /swapfile
          ls -lh /swapfile
          chmod 600 /swapfile
          mkswap /swapfile
