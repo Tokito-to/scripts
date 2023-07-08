@@ -108,5 +108,5 @@ chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/git"
 chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config"
 rm -rf scripts
 su $USERNAME <<EOF
-git clone https://github.com/Tokito-Kun/scripts/ ~/scripts
+git clone https://github.com/Tokito-Kun/scripts/ ~/git/scripts
 EOF
