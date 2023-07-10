@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+set -e
+
 #Get Username
 echo "Github username:"
 read -r USERNAME
