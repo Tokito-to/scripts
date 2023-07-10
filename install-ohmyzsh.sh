@@ -14,6 +14,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
 cp -fv ~/git/config/.zshrc  ~/
 cp -fv ~/git/config/.p10k.zsh ~/
+chsh -s /bin/zsh
 USER
 
 # Install ohmyzsh for root
@@ -24,6 +25,7 @@ sh config/ohmyzsh.sh
 cp -r "/home/$USERNAME/.oh-my-zsh" .
 cp -fv "config/.zshrc" .
 cp -fv "config/.p10k.zsh" .
+chsh -s /bin/zsh
 ROOT
 
 echo "Restart Konsole to load changes or enter exec zsh"
