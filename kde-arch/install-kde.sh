@@ -93,11 +93,17 @@ fingerprint=$(gpg --quiet --with-colons --import-options show-only --import --fi
 pacman-key --init
 pacman-key --add - <<< "${key}"
 pacman-key --lsign-key "${fingerprint}"
-pacman -Sy --noconfirm home_hawkeye116477_waterfox_Arch/waterfox-g-kpe
+pacman -Sy --noconfirm waterfox-g-kpe
+
+# Persepolis Download Manger
+pacman -Sy --noconfirm aria2 kwallet persepolis #kwallet required by persepolis
 
 # Install configs
 git clone https://github.com/Tokito-Kun/scripts/ -b configs config
 rm -rf "config/.git"
+# Persepolis Config
+mkdir -p "/home/$USERNAME/.waterfox/native-messaging-hosts/"
+cp -v "config/com.persepolis.pdmchromewrapper.json" "/home/$USERNAME/.waterfox/native-messaging-hosts/"
 mkdir -p "/home/$USERNAME/git"
 cp -rv "config" "/home/$USERNAME/git"
 mkdir -p "/etc/sddm.conf.d/"
