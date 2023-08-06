@@ -96,23 +96,26 @@ pacman-key --lsign-key "${fingerprint}"
 pacman -Sy --noconfirm waterfox-g-kpe
 
 # Persepolis Download Manger
-pacman -Sy --noconfirm aria2 kwallet persepolis #kwallet required by persepolis
+pacman -Sy --noconfirm aria2 python-setuptools kwallet persepolis #kwallet required by persepolis
 
-# Install configs
+# Custom configs
 git clone https://github.com/Tokito-Kun/scripts/ -b configs config
 rm -rf "config/.git"
 # Persepolis Config
 mkdir -p "/home/$USERNAME/.waterfox/native-messaging-hosts/"
 cp -v "config/com.persepolis.pdmchromewrapper.json" "/home/$USERNAME/.waterfox/native-messaging-hosts/"
-mkdir -p "/home/$USERNAME/git"
-cp -rv "config" "/home/$USERNAME/git"
+chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.waterfox/"
+# KDE Tweaks
 mkdir -p "/etc/sddm.conf.d/"
 mkdir -p "/home/$USERNAME/.config/"
 cp -fv "config/kde_settings.conf" "/etc/sddm.conf.d/"
 cp -fv "config/kcminputrc" "/home/$USERNAME/.config/"
-chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/git"
 chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config"
 rm -rf scripts
+# Copy to user 
+mkdir -p "/home/$USERNAME/git"
+cp -rv "config" "/home/$USERNAME/git"
+chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/git"
 su $USERNAME <<EOF
 git clone https://github.com/Tokito-Kun/scripts/ ~/git/scripts
 EOF
