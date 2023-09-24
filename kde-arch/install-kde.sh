@@ -15,12 +15,12 @@ prompt() {
 
 # check you Superuser Permissions
 if [[  $EUID -ne 0 ]]; then
-        echo "Run with sudo";
-        exit 0 ;fi
+	echo "Run with sudo"
+	exit 0;fi
 
 # Chech Internet Connection
 if ! ping -c1 archlinux.org ;then
-err "Connect to Internet & try again!" ;fi
+	err "Connect to Internet & try again!";fi
 
 # Configuration
 prompt "Standard Username [asuna]: "
@@ -41,7 +41,7 @@ echo ""
 echo ""
 printf "%-16s\t%-16s\n" "CONFIGURATION" "VALUE"
 printf "%-16s\t%-16s\n" "Username:" "$USERNAME"
-printf "%-16s\t%-16s\n" "User Password:" "`echo \"$USER_PASSWORD\" | sed 's/./*/g'`"
+printf "%-16s\t%-16s\n" "User Password:" "$(echo "$USER_PASSWORD" | sed 's/./*/g')"
 printf "%-16s\t%-16s\n" "User as Root:" "$USER_AS_ROOT"
 
 echo ""
@@ -49,17 +49,15 @@ prompt "Proceed? [y/N]: "
 read PROCEED
 [[ "$PROCEED" != "y" ]] && err "User chose not to proceed. Exiting."
 
-set -x
-
 # Instal and Setup sudo
-pacman -Sy --noconfirm sudo
+pacman -Sy --noconfirm --needed sudo
 groupadd sudo
 
 # Setup user
 useradd -m "$USERNAME"
 echo -e "$USER_PASSWORD\n$USER_PASSWORD" | passwd $USERNAME
 if [ "$USER_AS_ROOT" = "Yes" ];then
-usermod -aG sudo "$USERNAME" ;fi
+	usermod -aG sudo "$USERNAME";fi
 
 # Don't ask passwd for sudo superuser # only for $USERNAME
 echo "## Allow $USERNAME to execute any root command
@@ -70,11 +68,11 @@ sed -i "s/#ParallelDownloads = 5/ParallelDownloads = 4/" "/etc/pacman.conf"
 sed -i "s/#Color/Color/" "/etc/pacman.conf"
 
 #Install KDE Plasma Desktop
-pacman -Sy --noconfirm plasma-meta plasma-wayland-session konsole
+pacman -Sy --noconfirm --needed plasma-meta plasma-wayland-session konsole
 systemctl enable sddm.service
 
 #Install Additional Utils
-pacman -Sy --noconfirm dolphin kate zsh ark android-tools ntfs-3g
+pacman -Sy --noconfirm --needed dolphin kate zsh ark android-tools ntfs-3g
 
 #Remove unwanted packages
 pacman -Rdd --noconfirm discover plasma-welcome
@@ -93,12 +91,15 @@ fingerprint=$(gpg --quiet --with-colons --import-options show-only --import --fi
 pacman-key --init
 pacman-key --add - <<< "${key}"
 pacman-key --lsign-key "${fingerprint}"
-pacman -Sy --noconfirm waterfox-g-kpe
+pacman -Sy --noconfirm --needed waterfox-g-kpe
 
 # Persepolis Download Manger
-pacman -Sy --noconfirm aria2 python-setuptools kwallet persepolis #kwallet required by persepolis
+wget https://github.com/Tokito-Kun/aur-package-builder/releases/download/v2021.12.17-2/youtube-dl-2021.12.17-2-any.pkg.tar.zst
+pacman -U --noconfirm youtube-dl-2021.12.17-2-any.pkg.tar.zst 
+pacman -Sy --noconfirm --needed aria2 python-setuptools kwallet persepolis #kwallet required by persepolis
 
 # Custom configs
+git config --global core.editor nano
 git clone https://github.com/Tokito-Kun/scripts/ -b configs config
 rm -rf "config/.git"
 # Persepolis Config
@@ -112,7 +113,7 @@ cp -fv "config/kde_settings.conf" "/etc/sddm.conf.d/"
 cp -fv "config/kcminputrc" "/home/$USERNAME/.config/"
 chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/.config"
 rm -rf scripts
-# Copy to user 
+# Copy to user
 mkdir -p "/home/$USERNAME/git"
 cp -rv "config" "/home/$USERNAME/git"
 chown -R "$USERNAME:$USERNAME" "/home/$USERNAME/git"
