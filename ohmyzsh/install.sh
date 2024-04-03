@@ -13,6 +13,7 @@ SRC=$(pwd)
 
 # Install ohmyzsh for user
 wget -qO installer https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+chmod +x installer
 echo "Installing For $USER"
 sudo -u "$USER" bash <<USER
 	sh installer
