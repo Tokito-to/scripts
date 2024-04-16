@@ -2,10 +2,13 @@
 
 set -e
 
-if [[ ! "$(command -v zsh)" ]];then
-	echo "install zsh & Try again!"
-	exit 0
-fi
+err() {
+	echo -e " \e[91m[+]\e[39m $*"
+	exit 1
+}
+
+! command -v zsh &> /dev/null && err "Install zsh & Try Again!"
+! command -v which &> /dev/null && err "Install which & Try Again!"
 
 # Get Username
 echo "Username: $USER"

@@ -2,11 +2,13 @@
 
 set -e
 
+err() {
+	echo -e " \e[91m[+]\e[39m $*"
+	exit 1
+}
+
 # Check package
-if [[ -z $(command -v jq) ]]; then
-  echo "jq Not Installed."
-  exit 1
-fi
+! command -v jq &> /dev/null && err "jq Not Installed."
 
 # Get Username
 echo -n "Github username: "
@@ -18,10 +20,7 @@ GET_ID() { curl -s https://api.github.com/users/"$USERNAME" | jq '.id'; }
 ID=$(GET_ID)
 
 # Check Username
-if [ "$ID" == "null" ]; then
-  echo "Invalid Username!"
-  exit 1
-fi
+[ "$ID" == "null" ] && err "Invalid Username!"
 
 # Set as Git Global Configs
 echo "Global user.email: $ID+$USERNAME@users.noreply.github.com"
