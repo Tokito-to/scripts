@@ -1,0 +1,12 @@
+nano
+git
+ufw
+wget
+curl
+zsh
+sudo
+linux-lts
+base-devel
+sof-firmware
+wireless-regdb
+power-profiles-daemon

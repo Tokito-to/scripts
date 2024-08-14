@@ -46,7 +46,7 @@ if [[ ! "$SWAP_SIZE" =~ ^[0-9]+[GM]$ ]];then
   echo "Enter Swap size with it's prefix i.e G,M specified"
   prompt "Swap Size[G]: "
   read -r SWAP_SIZE
-	[[ ! "$SWAP_SIZE" =~ ^[0-9]+[GM]$ ]] && err "Invalid Swap Size"
+  [[ ! "$SWAP_SIZE" =~ ^[0-9]+[GM]$ ]] && err "Invalid Swap Size"
 fi
 
 echo ""
@@ -63,15 +63,14 @@ read -r PROCEED
 echo "Creating SwapFile "
 swapon --show
 fallocate -l "$SWAP_SIZE" "$SWAP"
-ls -lh "$SWAP"
 chmod 600 "$SWAP"
+ls -lh "$SWAP"
 mkswap "$SWAP"
 swapon "$SWAP"
 swapon --show
-cp /etc/fstab /etc/fstab.bak
+cp -v /etc/fstab /etc/fstab.bak
 echo -e "\n# $SWAP" >> /etc/fstab
 echo "$SWAP none swap sw 0 0" | tee -a /etc/fstab
 
 echo ""
-echo "Swap successfuly created!..."
-swapon --show
+echo "Swap successfuly created!"
