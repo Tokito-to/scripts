@@ -29,8 +29,7 @@ ufw reload
 usermod -aG qemu,libvirt-qemu,libvirt,kvm "$(whoami)"
 
 # Enable systemd services
-systemctl enable --now virtqemud.service
-systemctl enable --now virtlxcd.socket
+systemctl enable --now libvirtd.service
 systemctl enable --now spice-vdagentd # for clipboard support
 # clipboard: https://unix.stackexchange.com/a/671298
 
