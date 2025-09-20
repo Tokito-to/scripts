@@ -10,6 +10,7 @@ pacman -S --needed --noconfirm virt-manager dnsmasq qemu-base qemu-desktop
 
 # libvirt
 sed -i "/uri_default/s/#//" /etc/libvirt/libvirt.conf
+cp /etc/libvirt/libvirt.conf "${HOME}/.config/libvirt/"
 
 # libvirtd
 sed -i "/unix_sock_group/s/#//" /etc/libvirt/libvirtd.conf
