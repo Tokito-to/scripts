@@ -40,9 +40,9 @@ if ! pacman -S --noconfirm --needed grub; then
     abort "Unable To Install Grub"
 fi
 
-
 # OS-Prober
 if [ "${OS_PROBER}" = "Yes" ]; then
+    pacman -S --needed --noconfirm os-prober
     sed -i "/GRUB_DISABLE_OS_PROBER=false/"'s/^#//' /etc/default/grub
 fi
 
