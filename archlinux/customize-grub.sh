@@ -1,31 +1,83 @@
-#!/usr/bin/bash
+#!/bin/sh -e
 
-set -e
+abort() {
+    printf " \e[91m*\e[39m %s\n" "$*"
+    exit 1
+}
+
+prompt() {
+    printf " \e[92m*\e[39m %s" "$*"
+}
 
 # Run as Root
-if [[  $EUID -ne 0 ]];then
-     echo "Run as root";
-     exit 1
+if [ "$(id -u)" != "0" ]; then
+     abort "Run as Root"
 fi
 
-# Install Packages
-pacman -S --noconfirm --needed grub breeze-grub
+prompt "Enable OS-Prober [y/N]: "
+read -r OS_PROBER
+[ "${OS_PROBER}" != "y" ] && OS_PROBER=No || OS_PROBER=Yes
 
-# Enable OS-Prober
-sed -i "/GRUB_DISABLE_OS_PROBER=false/"'s/^#//' /etc/default/grub
+echo "cat - Catppuccin Mocha
+brez - Breeze Theme (KDE)"
+prompt "Grub Theme[cat|brez]: "
+read -r GRUB_THEME
+[ "${GRUB_THEME}" != "cat" ] && GRUB_THEME="Breeze" || GRUB_THEME="Catppuccin"
 
-# Set GRUB_DISTRIBUTOR to 'Arch Linux'
-sed -i 's/\(GRUB_DISTRIBUTOR="\)[^"]*"/\1'\''Arch Linux'\''"/' /etc/default/grub
+echo ""
+echo ""
+printf "%-16s\t%-16s\n" "CONFIGURATION" "VALUE"
+printf "%-16s\t%-16s\n" "OS Prober:" "${OS_PROBER}"
+printf "%-16s\t%-16s\n" "Grub Theme:" "${GRUB_THEME}"
+echo ""
 
-# Set Grub Theme (Breeze by KDE)
-sed -i 's/#\(GRUB_THEME="\)[^"]*"/\1\/usr\/share\/grub\/themes\/breeze\/theme.txt"/' /etc/default/grub
+prompt "Proceed? [y/N]: "
+read -r PROCEED
+[ "${PROCEED}" != "y" ] && abort "User chose not to proceed. Exiting."
+
+# Install Grub
+if ! pacman -S --noconfirm --needed grub; then
+    abort "Unable To Install Grub"
+fi
+
+
+# OS-Prober
+if [ "${OS_PROBER}" = "Yes" ]; then
+    sed -i "/GRUB_DISABLE_OS_PROBER=false/"'s/^#//' /etc/default/grub
+fi
 
 # Use Version Sort (To get Linux at top of the list)
 sed -i "s/version_sort -r/version_sort -V/" /etc/grub.d/10_linux
 
 # Display Distro Name on Load
-sed -i 's/OS="${GRUB_DISTRIBUTOR} Linux"/OS="${GRUB_DISTRIBUTOR}"/' /etc/grub.d/10_linux
-sed -i 's/Loading Linux/Loading ${OS}/' /etc/grub.d/10_linux
+sed -i "s/Loading Linux/Loading 'Arch Linux'/" /etc/grub.d/10_linux
+
+# Grub Theme
+if [ "${GRUB_THEME}" = "Breeze" ]; then
+    # Breeze Theme
+    pacman -S --needed --noconfirm breeze-grub
+
+    THEME="\/usr\/share\/grub\/themes\/breeze\/theme.txt"
+    sed -i -E "s/(#?)(GRUB_THEME=)(\"[^\"]*\")/\2\"$THEME\"/" /etc/default/grub
+
+elif [ "${GRUB_THEME}" = "Catppuccin" ]; then
+    # Catppuccin Theme
+    THEME="\/usr\/share\/grub\/themes\/catppuccin-mocha\/theme.txt"
+    THEME_PATH="$(echo "$THEME" | sed -e 's/\\//g' -e 's/\/theme.txt//')"
+
+    if [ -d "${THEME_PATH}" ]; then
+        echo "${THEME_PATH} already exists!"
+    else
+        rm -rf /tmp/grub
+        git clone https://github.com/catppuccin/grub.git --depth=1 /tmp/grub
+        cp -rf /tmp/grub/src/catppuccin-mocha-grub-theme/ /usr/share/grub/themes/catppuccin-mocha/
+        rm -rf /tmp/grub
+        SCRIPT_PATH="$(cd "$(dirname "$0")" && pwd)"
+        find "${SCRIPT_PATH}" -type f -name "background.png" -exec cp -f {} /usr/share/grub/themes/catppuccin-mocha/background.png \;
+    fi
+
+    sed -i -E "s/(#?)(GRUB_THEME=)(\"[^\"]*\")/\2\"$THEME\"/" /etc/default/grub
+fi
 
 # Restart MenuEntry to Grub
 if grep -q "menuentry \"Restart\"" /etc/grub.d/40_custom; then
@@ -51,3 +103,4 @@ fi
 
 # Generate Grub Config
 grub-mkconfig -o /boot/grub/grub.cfg
+
