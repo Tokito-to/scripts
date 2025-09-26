@@ -9,7 +9,7 @@ prompt() {
     printf " \e[92m*\e[39m %s" "$*"
 }
 
-# Run as Root
+# Privilege Check
 if [ "$(id -u)" != "0" ]; then
      abort "Run as Root"
 fi
@@ -18,17 +18,25 @@ prompt "Enable OS-Prober [y/N]: "
 read -r OS_PROBER
 [ "${OS_PROBER}" != "y" ] && OS_PROBER=No || OS_PROBER=Yes
 
-echo "cat - Catppuccin Mocha
-brez - Breeze Theme (KDE)"
-prompt "Grub Theme[cat|brez]: "
+prompt "Install Pre-configured Grub Theme[Y/n]: "
 read -r GRUB_THEME
-[ "${GRUB_THEME}" != "cat" ] && GRUB_THEME="Breeze" || GRUB_THEME="Catppuccin"
+[ "${GRUB_THEME}" != "y" ] && GRUB_THEME=No GRUB_THEME_CHOICE=No || GRUB_THEME=Yes
+
+if [ "${GRUB_THEME}" = "Yes" ]; then
+    echo "    cat - Catppuccin Mocha
+    brez - Breeze Theme (KDE)"
+
+    prompt "Grub Theme Choice[cat|brez]: "
+    read -r GRUB_THEME_CHOICE
+    [ "${GRUB_THEME_CHOICE}" != "cat" ] && GRUB_THEME_CHOICE="Breeze" || GRUB_THEME_CHOICE="Catppuccin"
+fi
 
 echo ""
 echo ""
 printf "%-16s\t%-16s\n" "CONFIGURATION" "VALUE"
 printf "%-16s\t%-16s\n" "OS Prober:" "${OS_PROBER}"
-printf "%-16s\t%-16s\n" "Grub Theme:" "${GRUB_THEME}"
+printf "%-16s\t%-16s\n" "Install Grub Theme:" "${GRUB_THEME}"
+printf "%-16s\t%-16s\n" "Grub Theme Choice:" "${GRUB_THEME_CHOICE}"
 echo ""
 
 prompt "Proceed? [y/N]: "
@@ -53,15 +61,19 @@ sed -i "s/version_sort -r/version_sort -V/" /etc/grub.d/10_linux
 sed -i "s/Loading Linux/Loading 'Arch Linux'/" /etc/grub.d/10_linux
 
 # Grub Theme
-if [ "${GRUB_THEME}" = "Breeze" ]; then
+if [ "${GRUB_THEME_CHOICE}" = "No"  ]; then
+    echo "No Grub Theme Selected! skipped!"
+elif [ "${GRUB_THEME_CHOICE}" = "Breeze" ]; then
     # Breeze Theme
+    echo "Installing Breeze Grub Theme"
     pacman -S --needed --noconfirm breeze-grub
 
     THEME="\/usr\/share\/grub\/themes\/breeze\/theme.txt"
     sed -i -E "s/(#?)(GRUB_THEME=)(\"[^\"]*\")/\2\"$THEME\"/" /etc/default/grub
 
-elif [ "${GRUB_THEME}" = "Catppuccin" ]; then
+elif [ "${GRUB_THEME_CHOICE}" = "Catppuccin" ]; then
     # Catppuccin Theme
+    echo "Installing Catppuccin Grub Theme"
     THEME="\/usr\/share\/grub\/themes\/catppuccin-mocha\/theme.txt"
     THEME_PATH="$(echo "$THEME" | sed -e 's/\\//g' -e 's/\/theme.txt//')"
 
